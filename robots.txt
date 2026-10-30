@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://e0raj.github.io/sudoku/sitemap.xml

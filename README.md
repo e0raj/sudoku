@@ -1,21 +1,20 @@
 # Sudoku
 
-A clean, fast Sudoku game that runs entirely in the browser — no frameworks, no build step, no trackers.
+A clean, full-screen Sudoku game that runs entirely in the browser — no frameworks, no build step, no trackers.
 
 **Play it live:** https://e0raj.github.io/sudoku/
 
-![Difficulty levels: Easy, Medium, Hard, Expert](https://img.shields.io/badge/levels-easy%20%C2%B7%20medium%20%C2%B7%20hard%20%C2%B7%20expert-6f8cff)
-
 ## Features
 
-- **Properly generated puzzles.** Every grid is created by a randomised backtracking fill and then dug out cell by cell, keeping only removals that leave exactly one solution. No hard-coded puzzle list.
+- **Properly generated puzzles.** Every grid comes from a randomised backtracking fill, then clues are removed one at a time and kept removed only if exactly one solution remains. There is no hard-coded puzzle list.
 - **Four difficulty levels** — Easy (45 clues), Medium (36), Hard (30), Expert (26).
-- **Pencil notes** for candidate digits, with automatic clean-up: when a digit is placed correctly, it disappears from the notes in its row, column and box.
-- **Undo, erase and three hints** per round.
-- **Live feedback** — highlights for the selected cell, its row, column and box, and every matching digit.
-- **Mistake limit** of three wrong entries, plus a timer that pauses when the round ends.
-- **Autosave** — refresh or close the tab and the round picks up where you left off.
-- **Dark and light themes**, keyboard play, and a layout that works down to small phone screens.
+- **Sound effects** synthesised with the Web Audio API — a soft blip for a correct digit, a low buzz for a wrong one, a chime for hints and a rising arpeggio when you finish. No audio files are downloaded; mute with the speaker button or the `M` key.
+- **Pencil notes** with automatic clean-up: a correct digit disappears from the notes in its row, column and box.
+- **Undo, erase and three hints** per round, plus a three-mistake limit.
+- **Live highlighting** of the selected cell, its row, column, box and every matching digit.
+- **Autosave** — the puzzle, timer and notes survive a refresh.
+- **Dark and light themes**, full keyboard play, and a layout that fits without scrolling from desktop down to small phones.
+- **SEO ready** — descriptive metadata, Open Graph and Twitter cards, JSON-LD structured data, `robots.txt`, `sitemap.xml` and a web app manifest.
 
 ## Keyboard controls
 
@@ -27,23 +26,33 @@ A clean, fast Sudoku game that runs entirely in the browser — no frameworks, n
 | `N` | Toggle notes mode |
 | `H` | Use a hint |
 | `U` | Undo |
+| `M` | Mute or unmute sound |
 | `Esc` | Clear the selection |
 
 ## Project structure
 
 ```
 sudoku/
-├── index.html          # page shell and layout
+├── index.html                  # the game
+├── about.html                  # rules, strategy and FAQ
+├── robots.txt
+├── sitemap.xml
+├── site.webmanifest            # installable web app metadata
 ├── assets/
 │   ├── css/
-│   │   └── style.css   # theme variables, board, pad, responsive rules
+│   │   └── style.css           # theme variables, grid, controls, responsive rules
+│   ├── img/
+│   │   ├── favicon.svg
+│   │   ├── apple-touch-icon.png
+│   │   └── og-image.png        # social preview card
 │   └── js/
-│       ├── sudoku.js   # puzzle engine — pure functions, no DOM
-│       └── app.js      # game state, rendering and input
+│       ├── sudoku.js           # puzzle engine — pure functions, no DOM
+│       ├── audio.js            # Web Audio sound effects
+│       └── app.js              # game state, rendering and input
 └── README.md
 ```
 
-The engine in `sudoku.js` has no DOM dependencies, so it can be imported and tested on its own (for example with Node):
+`assets/js/sudoku.js` has no DOM dependencies, so it can be imported and tested on its own:
 
 ```js
 import { generatePuzzle, countSolutions } from './assets/js/sudoku.js';
@@ -54,7 +63,7 @@ console.log(countSolutions(puzzle, 2)); // 1 — exactly one solution
 
 ## Run it locally
 
-Because the JavaScript is loaded as ES modules, open it through a local server rather than `file://`:
+The JavaScript loads as ES modules, so serve the folder rather than opening `file://`:
 
 ```bash
 git clone https://github.com/e0raj/sudoku.git
@@ -65,7 +74,7 @@ python3 -m http.server 8000
 
 ## Tech
 
-Vanilla HTML, CSS and JavaScript (ES modules). No dependencies, no bundler, no analytics. Hosted with GitHub Pages.
+Vanilla HTML, CSS and JavaScript (ES modules), plus the Web Audio API for sound. No dependencies, no bundler, no analytics. Hosted on GitHub Pages.
 
 ## Licence
 

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+
+  <title>How to Play Sudoku — Rules, Strategy and Tips | Sudoku</title>
+  <meta name="description" content="Learn the Sudoku rules, the difference between the four difficulty levels, and the solving techniques that take you from naked singles to pointing pairs. Includes a short FAQ." />
+  <meta name="keywords" content="how to play sudoku, sudoku rules, sudoku strategy, sudoku tips, sudoku techniques, sudoku for beginners" />
+  <meta name="author" content="Raj" />
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+  <meta name="theme-color" content="#0e1120" />
+  <meta name="color-scheme" content="dark light" />
+  <link rel="canonical" href="https://e0raj.github.io/sudoku/about.html" />
+
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="Sudoku" />
+  <meta property="og:url" content="https://e0raj.github.io/sudoku/about.html" />
+  <meta property="og:title" content="How to Play Sudoku — Rules, Strategy and Tips" />
+  <meta property="og:description" content="Sudoku rules, difficulty levels and the solving techniques that actually help." />
+  <meta property="og:image" content="https://e0raj.github.io/sudoku/assets/img/og-image.png" />
+  <meta property="og:locale" content="en_IN" />
+
+  <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg" />
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png" />
+  <link rel="manifest" href="site.webmanifest" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Article",
+        "@id": "https://e0raj.github.io/sudoku/about.html#article",
+        "headline": "How to Play Sudoku — Rules, Strategy and Tips",
+        "description": "The rules of Sudoku, how the four difficulty levels differ, and the solving techniques worth learning.",
+        "inLanguage": "en",
+        "author": { "@type": "Person", "name": "Raj", "url": "https://github.com/e0raj" },
+        "mainEntityOfPage": "https://e0raj.github.io/sudoku/about.html",
+        "image": "https://e0raj.github.io/sudoku/assets/img/og-image.png"
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Sudoku", "item": "https://e0raj.github.io/sudoku/" },
+          { "@type": "ListItem", "position": 2, "name": "How to play", "item": "https://e0raj.github.io/sudoku/about.html" }
+        ]
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Is this Sudoku game free to play?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. The game is free, needs no account and shows no ads. It runs entirely in your browser."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does every puzzle have only one solution?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. Each puzzle is generated from a complete grid and cells are only removed while the remaining clues still allow exactly one solution, so guessing is never required."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How many mistakes am I allowed?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Three wrong entries end the round. Wrong digits are shown in red so you can undo them before the limit is reached."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is my progress saved?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. The current puzzle, timer and notes are stored in your browser, so closing the tab and coming back resumes the same round."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <div class="app app--page">
+    <header class="topbar">
+      <p class="brand">
+        <span class="brand__mark" aria-hidden="true"></span>
+        <a class="brand__link" href="./">Sudoku</a>
+      </p>
+      <div class="topbar__actions">
+        <a class="tool" href="./">&larr; Play</a>
+      </div>
+    </header>
+
+    <main class="page">
+      <article class="prose">
+        <h1>How to play Sudoku</h1>
+        <p class="lede">
+          Sudoku is a logic puzzle played on a 9&times;9 grid. The grid is split into nine
+          3&times;3 boxes, and a handful of cells already contain digits. Your job is to fill
+          every remaining cell so that each row, each column and each box holds the digits
+          1 to 9 exactly once.
+        </p>
+
+        <h2>The rules in three lines</h2>
+        <ol>
+          <li>Every row must contain 1&ndash;9 with no repeats.</li>
+          <li>Every column must contain 1&ndash;9 with no repeats.</li>
+          <li>Every 3&times;3 box must contain 1&ndash;9 with no repeats.</li>
+        </ol>
+        <p>
+          That is the whole rule set. There is no arithmetic and no guessing: a well-formed
+          puzzle has one unique solution that can be reached by pure deduction.
+        </p>
+
+        <h2>Playing in this app</h2>
+        <p>
+          Tap or click a cell, then pick a digit from the number row or press it on your
+          keyboard. Turn on <strong>Notes</strong> to pencil in candidate digits; when you
+          place a digit correctly it is removed from the notes in that row, column and box.
+          <strong>Undo</strong> steps back through your moves, and each round gives you three
+          <strong>hints</strong>. Three wrong entries end the round, so wrong digits are worth
+          undoing rather than leaving in place.
+        </p>
+
+        <h2>What the four levels mean</h2>
+        <p>
+          Difficulty here is set by how many clues you start with: Easy begins with 45 filled
+          cells, Medium with 36, Hard with 30 and Expert with 26. Fewer clues means fewer
+          obvious placements, so you lean more on notes and on the techniques below.
+        </p>
+
+        <h2>Techniques, easiest first</h2>
+        <h3>1. Naked single</h3>
+        <p>
+          A cell where eight digits are already excluded by its row, column and box. Only one
+          candidate remains, so it must go there. This is the workhorse of Easy and Medium.
+        </p>
+        <h3>2. Hidden single</h3>
+        <p>
+          A digit that can only fit in one cell of a given row, column or box, even if that
+          cell has several candidates. Scan each box for a digit that appears in just one
+          place and place it.
+        </p>
+        <h3>3. Naked pair</h3>
+        <p>
+          Two cells in the same row, column or box that both hold exactly the same two
+          candidates. Those two digits must occupy those two cells, so remove them from every
+          other cell in that unit.
+        </p>
+        <h3>4. Pointing pair</h3>
+        <p>
+          Inside a box, a candidate digit restricted to one row or column. The digit must sit
+          in that line within the box, which eliminates it from the rest of that row or column.
+        </p>
+        <h3>5. Cross-hatching</h3>
+        <p>
+          For a digit, sweep its existing placements across the grid and see where it is still
+          allowed in each box. Often three boxes line up and force the position in the fourth.
+        </p>
+
+        <h2>Good habits</h2>
+        <p>
+          Work in passes: place every obvious digit first, then fill notes everywhere, then
+          look for patterns. Keep notes tidy rather than guessing and erasing, and if a puzzle
+          stalls, switch to a different digit or a different box instead of staring at the same
+          cell.
+        </p>
+
+        <h2>Frequently asked questions</h2>
+        <h3>Is the game free?</h3>
+        <p>Yes. No account, no ads, no downloads. It runs in your browser.</p>
+        <h3>Does every puzzle have exactly one solution?</h3>
+        <p>
+          Yes. Puzzles are built by removing clues only while a single solution remains, so a
+          logical path to the answer always exists.
+        </p>
+        <h3>How many mistakes can I make?</h3>
+        <p>Three wrong entries end the round. Wrong digits show in red, and you can undo them.</p>
+        <h3>Is my progress saved?</h3>
+        <p>
+          Yes. The puzzle, timer and notes are stored in your browser, so you can close the tab
+          and continue later on the same device.
+        </p>
+
+        <p class="prose__back"><a href="./">Back to the game</a></p>
+      </article>
+    </main>
+
+    <footer class="footer">
+      <p class="footer__links">
+        <a href="./">Play Sudoku</a>
+        <span aria-hidden="true">&middot;</span>
+        <a href="https://github.com/e0raj/sudoku" rel="noopener">Source code</a>
+      </p>
+    </footer>
+  </div>
+</body>
+</html>

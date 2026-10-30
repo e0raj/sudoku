@@ -1,8 +1,8 @@
 /**
  * app.js — UI layer for the Sudoku game.
  *
- * Owns the game state, renders the board and wires up input
- * (mouse, touch, keyboard). The puzzle logic itself lives in sudoku.js.
+ * Owns game state, renders the board and wires up input (pointer, touch and
+ * keyboard) plus sound. Puzzle logic lives in sudoku.js, audio in audio.js.
  */
 
 import {
@@ -14,28 +14,30 @@ import {
   isSolved,
 } from './sudoku.js';
 
+import { play, unlock, setMuted, isMuted } from './audio.js';
+
 const MAX_MISTAKES = 3;
 const MAX_HINTS = 3;
-const STORAGE_KEY = 'sudoku.game.v1';
+const STORAGE_KEY = 'sudoku.game.v2';
 const THEME_KEY = 'sudoku.theme';
+const MUTE_KEY = 'sudoku.muted';
 
 /* ---------- DOM references ---------- */
 
 const els = {
   board: document.getElementById('board'),
   pad: document.getElementById('pad'),
-  difficulties: document.getElementById('difficulties'),
+  levels: document.getElementById('difficulties'),
   statDifficulty: document.getElementById('statDifficulty'),
   statTimer: document.getElementById('statTimer'),
   statMistakes: document.getElementById('statMistakes'),
   statHints: document.getElementById('statHints'),
-  progressNote: document.getElementById('progressNote'),
   btnUndo: document.getElementById('btnUndo'),
   btnErase: document.getElementById('btnErase'),
   btnNotes: document.getElementById('btnNotes'),
   btnHint: document.getElementById('btnHint'),
+  soundToggle: document.getElementById('soundToggle'),
   themeToggle: document.getElementById('themeToggle'),
-  themeIcon: document.getElementById('themeIcon'),
   modal: document.getElementById('modal'),
   modalTitle: document.getElementById('modalTitle'),
   modalText: document.getElementById('modalText'),
@@ -74,18 +76,19 @@ function createNotesGrid() {
 
 buildBoard();
 buildNumberPad();
-buildDifficultyButtons();
+buildLevelButtons();
 applySavedTheme();
+applySavedSound();
 bindEvents();
 
 if (!restoreGame()) {
-  startNewGame('medium');
+  startNewGame('medium', { silent: true });
 }
 render();
 
 /* ---------- Board construction ---------- */
 
-/** Builds the 9 boxes of 9 cells so box borders come from the layout. */
+/** Builds nine boxes of nine cells, so the 3x3 rhythm comes from the layout. */
 function buildBoard() {
   els.board.innerHTML = '';
 
@@ -121,29 +124,30 @@ function buildNumberPad() {
     button.type = 'button';
     button.className = 'pad__btn';
     button.dataset.value = String(value);
-    button.innerHTML = `<span>${value}</span><span class="pad__count" data-count>9</span>`;
+    button.setAttribute('aria-label', `Place ${value}`);
+    button.innerHTML = `<span>${value}</span><span class="pad__count" data-count aria-hidden="true">9</span>`;
     button.addEventListener('click', () => placeValue(value));
     els.pad.appendChild(button);
   }
 }
 
-function buildDifficultyButtons() {
-  els.difficulties.innerHTML = '';
+function buildLevelButtons() {
+  els.levels.innerHTML = '';
 
   Object.entries(DIFFICULTIES).forEach(([key, config]) => {
     const button = document.createElement('button');
     button.type = 'button';
-    button.className = 'diff-btn';
+    button.className = 'level';
     button.dataset.difficulty = key;
     button.textContent = config.label;
     button.addEventListener('click', () => startNewGame(key));
-    els.difficulties.appendChild(button);
+    els.levels.appendChild(button);
   });
 }
 
 /* ---------- Game lifecycle ---------- */
 
-function startNewGame(difficulty) {
+function startNewGame(difficulty, { silent = false } = {}) {
   const { puzzle, solution } = generatePuzzle(difficulty);
 
   state.puzzle = puzzle;
@@ -164,6 +168,8 @@ function startNewGame(difficulty) {
   startTimer();
   render();
   saveGame();
+
+  if (!silent) play('start');
 }
 
 function startTimer() {
@@ -206,8 +212,10 @@ function placeValue(value) {
 
   if (state.notesMode) {
     toggleNote(row, col, value);
+    play('note');
   } else if (state.board[row][col] === value) {
     state.board[row][col] = 0; // tapping the same digit clears the cell
+    play('erase');
   } else {
     commitValue(row, col, value);
   }
@@ -232,10 +240,12 @@ function commitValue(row, col, value) {
 
   if (value !== state.solution[row][col]) {
     state.mistakes += 1;
+    play('error');
     if (state.mistakes >= MAX_MISTAKES) endGame('lost');
     return;
   }
 
+  play('place');
   clearPeerNotes(row, col, value);
 
   if (isSolved(state.board, state.solution)) {
@@ -269,19 +279,21 @@ function eraseCell() {
   pushHistory(row, col);
   state.board[row][col] = 0;
   state.notes[row][col].clear();
+  play('erase');
   render();
   saveGame();
 }
 
 function useHint() {
   if (state.status !== 'playing') return;
+
   if (state.hints <= 0) {
     showModal({
       title: 'No hints left',
-      text: 'You have used all three hints for this puzzle. Keep going — you have got this.',
+      text: 'All three hints for this puzzle are used. Every grid has a single solution — keep going, you can finish it.',
       primaryLabel: 'Keep playing',
       primaryAction: hideModal,
-      secondaryLabel: 'New game',
+      secondaryLabel: 'New puzzle',
       secondaryAction: () => startNewGame(state.difficulty),
     });
     return;
@@ -298,6 +310,8 @@ function useHint() {
   state.hints -= 1;
   clearPeerNotes(row, col, state.solution[row][col]);
   state.selected = { row, col };
+
+  play('hint');
 
   if (isSolved(state.board, state.solution)) endGame('won');
 
@@ -331,6 +345,7 @@ function undo() {
   state.board[entry.row][entry.col] = entry.value;
   state.notes[entry.row][entry.col] = new Set(entry.notes);
   state.selected = { row: entry.row, col: entry.col };
+  play('undo');
   render();
   saveGame();
 }
@@ -347,6 +362,7 @@ function pushHistory(row, col) {
 
 function toggleNotesMode() {
   state.notesMode = !state.notesMode;
+  play('note');
   render();
 }
 
@@ -411,24 +427,15 @@ function renderNotes(notes) {
 function updateStats() {
   els.statDifficulty.textContent = DIFFICULTIES[state.difficulty].label;
   els.statTimer.textContent = formatTime(state.seconds);
-  els.statMistakes.textContent = `${state.mistakes}/${MAX_MISTAKES}`;
-  els.statHints.textContent = String(state.hints);
-
-  const filled = state.board.flat().filter((value) => value !== 0).length;
-  els.progressNote.textContent =
-    state.status === 'playing'
-      ? `${filled} of 81 cells filled. Progress saves automatically in this browser.`
-      : 'Round finished. Start a new game whenever you are ready.';
+  els.statMistakes.textContent = `${state.mistakes} of ${MAX_MISTAKES} mistakes`;
+  els.statHints.textContent = `${state.hints} ${state.hints === 1 ? 'hint' : 'hints'}`;
 
   els.btnNotes.setAttribute('aria-pressed', String(state.notesMode));
   els.btnUndo.disabled = state.history.length === 0 || state.status !== 'playing';
   els.btnHint.disabled = state.hints <= 0 || state.status !== 'playing';
 
-  document.querySelectorAll('.diff-btn').forEach((button) => {
-    button.setAttribute(
-      'aria-pressed',
-      String(button.dataset.difficulty === state.difficulty),
-    );
+  els.levels.querySelectorAll('.level').forEach((button) => {
+    button.setAttribute('aria-pressed', String(button.dataset.difficulty === state.difficulty));
   });
 }
 
@@ -454,9 +461,10 @@ function endGame(result) {
   saveGame();
 
   if (result === 'won') {
+    play('win');
     showModal({
       title: 'Puzzle solved',
-      text: `Clean finish — ${formatTime(state.seconds)} with ${state.mistakes} ${
+      text: `Clean finish in ${formatTime(state.seconds)} — ${state.mistakes} ${
         state.mistakes === 1 ? 'mistake' : 'mistakes'
       } and ${MAX_HINTS - state.hints} ${
         MAX_HINTS - state.hints === 1 ? 'hint' : 'hints'
@@ -466,18 +474,20 @@ function endGame(result) {
       secondaryLabel: 'Next level',
       secondaryAction: () => startNewGame(nextDifficulty(state.difficulty)),
     });
-  } else {
-    showModal({
-      title: 'Out of mistakes',
-      text: `Three wrong entries ended this round after ${formatTime(
-        state.seconds,
-      )}. Every puzzle is solvable — try the same level again.`,
-      primaryLabel: 'New puzzle',
-      primaryAction: () => startNewGame(state.difficulty),
-      secondaryLabel: 'Close',
-      secondaryAction: hideModal,
-    });
+    return;
   }
+
+  play('lose');
+  showModal({
+    title: 'Out of mistakes',
+    text: `Three wrong entries ended this round after ${formatTime(
+      state.seconds,
+    )}. Every puzzle has exactly one solution, so the same level is always winnable.`,
+    primaryLabel: 'New puzzle',
+    primaryAction: () => startNewGame(state.difficulty),
+    secondaryLabel: 'Close',
+    secondaryAction: hideModal,
+  });
 }
 
 function nextDifficulty(current) {
@@ -513,6 +523,7 @@ function bindEvents() {
   els.btnErase.addEventListener('click', eraseCell);
   els.btnNotes.addEventListener('click', toggleNotesMode);
   els.btnHint.addEventListener('click', useHint);
+  els.soundToggle.addEventListener('click', toggleSound);
   els.themeToggle.addEventListener('click', toggleTheme);
 
   els.modal.addEventListener('click', (event) => {
@@ -520,6 +531,11 @@ function bindEvents() {
   });
 
   document.addEventListener('keydown', handleKeydown);
+
+  // Browsers only allow audio after a gesture; warm the context on the first one.
+  const warmUp = () => unlock();
+  document.addEventListener('pointerdown', warmUp, { once: true });
+  document.addEventListener('keydown', warmUp, { once: true });
 }
 
 function handleKeydown(event) {
@@ -567,6 +583,11 @@ function handleKeydown(event) {
       undo();
       break;
 
+    case 'm':
+    case 'M':
+      toggleSound();
+      break;
+
     case 'Escape':
       state.selected = null;
       render();
@@ -590,7 +611,7 @@ function moveSelection(key) {
   cellElements[row][col].focus({ preventScroll: true });
 }
 
-/* ---------- Theme ---------- */
+/* ---------- Theme and sound preferences ---------- */
 
 function applySavedTheme() {
   const saved = readStorage(THEME_KEY);
@@ -606,7 +627,28 @@ function toggleTheme() {
 
 function setTheme(theme) {
   document.documentElement.dataset.theme = theme;
-  els.themeIcon.textContent = theme === 'light' ? '\u2600' : '\u263E';
+  els.themeToggle.setAttribute(
+    'aria-label',
+    theme === 'light' ? 'Switch to dark theme' : 'Switch to light theme',
+  );
+}
+
+function applySavedSound() {
+  setSound(readStorage(MUTE_KEY) !== 'on');
+}
+
+function toggleSound() {
+  const turningOn = isMuted();
+  setSound(turningOn);
+  if (turningOn) play('note');
+}
+
+/** Updates the mute state, the button and the stored preference. */
+function setSound(enabled) {
+  setMuted(!enabled);
+  els.soundToggle.setAttribute('aria-pressed', String(enabled));
+  els.soundToggle.setAttribute('aria-label', enabled ? 'Sound effects on' : 'Sound effects muted');
+  writeStorage(MUTE_KEY, enabled ? 'off' : 'on');
 }
 
 /* ---------- Persistence ---------- */
