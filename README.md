@@ -13,7 +13,8 @@ A clean, full-screen Sudoku game that runs entirely in the browser — no framew
 - **Undo, erase and three hints** per round, plus a three-mistake limit.
 - **Live highlighting** of the selected cell, its row, column, box and every matching digit.
 - **Autosave** — the puzzle, timer and notes survive a refresh.
-- **Dark and light themes**, full keyboard play, and a layout that fits without scrolling from desktop down to small phones.
+- **Dark and light themes**, full keyboard play, and a first screen that fits without scrolling from desktop down to small phones.
+- **A written section below the game** — what Sudoku is, where it came from, what playing it is good for, and full credits.
 - **SEO ready** — descriptive metadata, Open Graph and Twitter cards, JSON-LD structured data, `robots.txt`, `sitemap.xml` and a web app manifest.
 
 ## Keyboard controls
@@ -44,6 +45,7 @@ sudoku/
 │   ├── img/
 │   │   ├── favicon.svg
 │   │   ├── apple-touch-icon.png
+│   │   ├── rules.svg           # diagram used in the about section
 │   │   └── og-image.png        # social preview card
 │   └── js/
 │       ├── sudoku.js           # puzzle engine — pure functions, no DOM

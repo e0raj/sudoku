@@ -9,8 +9,8 @@
   <meta name="keywords" content="sudoku, play sudoku online, free sudoku game, sudoku puzzles, hard sudoku, expert sudoku, sudoku with notes, sudoku hints, daily sudoku, sudoku no ads" />
   <meta name="author" content="Raj" />
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
-  <meta name="theme-color" content="#0e1120" media="(prefers-color-scheme: dark)" />
-  <meta name="theme-color" content="#eef1f9" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#0b0e1a" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#f4f6fd" media="(prefers-color-scheme: light)" />
   <meta name="color-scheme" content="dark light" />
   <link rel="canonical" href="https://e0raj.github.io/sudoku/" />
 
@@ -64,16 +64,10 @@
         "isAccessibleForFree": true,
         "inLanguage": "en",
         "image": "https://e0raj.github.io/sudoku/assets/img/og-image.png",
-        "offers": {
-          "@type": "Offer",
-          "price": "0",
-          "priceCurrency": "INR"
-        },
-        "author": {
-          "@type": "Person",
-          "name": "Raj",
-          "url": "https://github.com/e0raj"
-        },
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "INR" },
+        "author": { "@type": "Person", "name": "Raj", "url": "https://github.com/e0raj" },
+        "creator": { "@type": "Person", "name": "Raj", "url": "https://github.com/e0raj" },
+        "license": "https://opensource.org/licenses/MIT",
         "sameAs": ["https://github.com/e0raj/sudoku"]
       }
     ]
@@ -83,7 +77,7 @@
 <body>
   <a class="skip-link" href="#board">Skip to the board</a>
 
-  <div class="app">
+  <div class="shell">
     <header class="topbar">
       <p class="brand">
         <span class="brand__mark" aria-hidden="true"></span>
@@ -108,39 +102,128 @@
       </div>
     </header>
 
-    <main class="game">
-      <h1 class="sr-only">Play Sudoku online</h1>
+    <main class="main">
+      <section class="game" aria-labelledby="game-title">
+        <h1 class="sr-only" id="game-title">Play Sudoku online</h1>
 
-      <p class="statusline" aria-live="polite">
-        <span id="statDifficulty">Medium</span>
-        <span class="sep" aria-hidden="true">/</span>
-        <span id="statTimer" role="timer">00:00</span>
-        <span class="sep" aria-hidden="true">/</span>
-        <span id="statMistakes">0 of 3 mistakes</span>
-        <span class="sep" aria-hidden="true">/</span>
-        <span id="statHints">3 hints</span>
-      </p>
+        <p class="statusline" aria-live="polite">
+          <span id="statDifficulty">Medium</span>
+          <span class="sep" aria-hidden="true">/</span>
+          <span id="statTimer" role="timer">00:00</span>
+          <span class="sep" aria-hidden="true">/</span>
+          <span id="statMistakes">0 of 3 mistakes</span>
+          <span class="sep" aria-hidden="true">/</span>
+          <span id="statHints">3 hints</span>
+        </p>
 
-      <div class="board" id="board" role="grid" aria-label="Sudoku board, 9 rows by 9 columns" tabindex="-1"></div>
+        <div class="board" id="board" role="grid" aria-label="Sudoku board, 9 rows by 9 columns" tabindex="-1"></div>
 
-      <div class="pad" id="pad" role="group" aria-label="Number pad"></div>
+        <div class="pad" id="pad" role="group" aria-label="Number pad"></div>
 
-      <div class="toolbar" role="group" aria-label="Game actions">
-        <button class="tool" id="btnUndo" type="button">Undo</button>
-        <button class="tool" id="btnErase" type="button">Erase</button>
-        <button class="tool" id="btnNotes" type="button" aria-pressed="false">Notes</button>
-        <button class="tool" id="btnHint" type="button">Hint</button>
-      </div>
+        <div class="toolbar" role="group" aria-label="Game actions">
+          <button class="tool" id="btnUndo" type="button">Undo</button>
+          <button class="tool" id="btnErase" type="button">Erase</button>
+          <button class="tool" id="btnNotes" type="button" aria-pressed="false">Notes</button>
+          <button class="tool" id="btnHint" type="button">Hint</button>
+        </div>
 
-      <nav class="levels" id="difficulties" aria-label="Choose a difficulty"></nav>
+        <nav class="levels" id="difficulties" aria-label="Choose a difficulty"></nav>
+      </section>
+
+      <section class="content" aria-labelledby="about-title">
+        <h2 class="content__title" id="about-title">About Sudoku</h2>
+
+        <p>
+          Sudoku is a logic puzzle played on a 9&times;9 grid. The grid is divided into nine
+          3&times;3 blocks, and a few cells start out filled with digits. The task is to finish
+          the grid so that every row, every column and every 3&times;3 block contains the digits
+          1 to 9 exactly once. There is no arithmetic in it — nothing is added or multiplied.
+          Every move is pure deduction: this digit cannot go here, therefore it must go there.
+        </p>
+
+        <figure class="figure">
+          <img
+            src="assets/img/rules.svg"
+            width="338"
+            height="338"
+            alt="A Sudoku grid with one row, one column and one 3 by 3 block highlighted to show the three rules"
+            loading="lazy"
+            decoding="async"
+          />
+          <figcaption>One highlighted row, column and block — each must hold 1&ndash;9 exactly once.</figcaption>
+        </figure>
+
+        <h3>A short history</h3>
+        <p>
+          The modern puzzle was designed by <strong>Howard Garns</strong>, a retired architect from
+          Indianapolis, and first published by Dell Magazines in <strong>1979</strong> under the name
+          &ldquo;Number Place&rdquo;. It crossed to Japan in <strong>1984</strong>, where the publisher
+          Nikoli called it <em>S&#363;ji wa dokushin ni kagiru</em> — roughly &ldquo;the digits must stay
+          single&rdquo; — which readers shortened to <strong>Sudoku</strong>. The name and the format
+          went global in <strong>2004&ndash;05</strong>, when Wayne Gould, a retired Hong Kong judge,
+          persuaded <em>The Times</em> to print a daily puzzle. Within a year it was in newspapers in
+          dozens of countries, and it has stayed there since.
+        </p>
+
+        <h3>What playing it does for you</h3>
+        <ul class="benefits">
+          <li><strong>Attention.</strong> A single grid holds your focus for ten to thirty minutes with nothing to scroll — rare on a phone.</li>
+          <li><strong>Logical reasoning.</strong> Every placement is a small if&ndash;then argument. Doing that repeatedly builds a habit of checking consequences before acting.</li>
+          <li><strong>Pattern spotting.</strong> Naked singles, hidden singles, pointing pairs: the more grids you solve, the faster you notice the shapes.</li>
+          <li><strong>Working memory.</strong> Holding candidate digits in your head while scanning a row is light exercise for short-term memory.</li>
+          <li><strong>A calm, finite task.</strong> Unlike a feed, the puzzle ends. Finishing something small and complete is a genuinely pleasant way to wind down.</li>
+          <li><strong>It costs nothing.</strong> No equipment, no account, no network once the page has loaded.</li>
+        </ul>
+        <p class="note">
+          People often say puzzles keep the mind sharp. The honest answer is that the evidence is
+          mixed: mentally active people do tend to stay sharper, but it is hard to show that the
+          puzzles themselves are the cause. Treat Sudoku as a good habit, not a medical one.
+        </p>
+
+        <h3>Who built this, and why</h3>
+        <p>
+          This game was designed and built by <a href="https://github.com/e0raj">Raj</a>. The reason
+          was simple: most free Sudoku pages are buried under ads, pop-ups and account prompts. This
+          one is a single page of plain HTML, CSS and JavaScript — no framework, no build step, no
+          trackers, nothing to sign up for. Each puzzle is generated from scratch in the browser and
+          clues are removed only while exactly one solution remains, so guessing is never needed.
+          Sound effects are synthesised live with the Web Audio API, so no audio files are downloaded,
+          and the game keeps working offline once it has loaded.
+        </p>
+
+        <figure class="figure figure--wide">
+          <img
+            src="assets/img/og-image.png"
+            width="1200"
+            height="630"
+            alt="Preview of the Sudoku game: a dark screen with the title Sudoku, a puzzle grid and the words notes, hints, undo, sound and four levels"
+            loading="lazy"
+            decoding="async"
+          />
+          <figcaption>Free, ad-free and built to load instantly on a phone.</figcaption>
+        </figure>
+      </section>
     </main>
 
-    <footer class="footer">
-      <p class="footer__keys">1–9 place &middot; &larr; &uarr; &rarr; &darr; move &middot; Backspace erase &middot; N notes &middot; H hint &middot; U undo</p>
-      <p class="footer__links">
-        <a href="about.html">How to play &amp; strategy</a>
+    <footer class="credits" role="contentinfo">
+      <h2 class="credits__title">Credits</h2>
+      <p class="credits__body">
+        Game design, puzzle engine, interface, sound and writing by
+        <a href="https://github.com/e0raj">Raj (e0raj)</a>.
+        Built with vanilla HTML, CSS and JavaScript; sound generated with the Web Audio API.
+        Icons and diagrams drawn by hand as SVG. Typeface: your system UI font.
+        Puzzle format inspired by Howard Garns&rsquo; &ldquo;Number Place&rdquo; (1979) and Nikoli&rsquo;s
+        Sudoku (1984).
+      </p>
+      <p class="credits__meta">
+        Released under the <a href="https://github.com/e0raj/sudoku/blob/main/LICENSE">MIT licence</a>
         <span aria-hidden="true">&middot;</span>
-        <a href="https://github.com/e0raj/sudoku" rel="noopener">Source code</a>
+        <a href="https://github.com/e0raj/sudoku">Source code</a>
+        <span aria-hidden="true">&middot;</span>
+        <a href="about.html">How to play &amp; strategy</a>
+      </p>
+      <p class="credits__keys">
+        1&ndash;9 place &middot; &larr; &uarr; &rarr; &darr; move &middot; Backspace erase &middot; N notes &middot; H hint &middot; U undo &middot; M mute
       </p>
     </footer>
   </div>
