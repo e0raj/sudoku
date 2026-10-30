@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sudoku — a clean, modern puzzle game</title>
+  <meta name="description" content="Play classic 9x9 Sudoku in your browser. Four difficulty levels, notes, hints, undo and a timer. No installs, no ads." />
+  <meta name="theme-color" content="#0e1120" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%236f8cff'/%3E%3Cg fill='%230e1120'%3E%3Crect x='6' y='6' width='6' height='6'/%3E%3Crect x='20' y='6' width='6' height='6'/%3E%3Crect x='13' y='13' width='6' height='6'/%3E%3Crect x='6' y='20' width='6' height='6'/%3E%3Crect x='20' y='20' width='6' height='6'/%3E%3C/g%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="app__header">
+      <div class="app__brand">
+        <h1 class="app__title">Sudoku</h1>
+        <p class="app__subtitle">Classic 9&times;9 logic puzzle</p>
+      </div>
+      <button id="themeToggle" class="icon-btn" type="button" aria-label="Switch theme" title="Switch theme">
+        <span id="themeIcon" aria-hidden="true">&#9789;</span>
+      </button>
+    </header>
+
+    <main class="game">
+      <section class="board-area" aria-label="Game">
+        <div class="stats">
+          <div class="stat">
+            <span class="stat__label">Difficulty</span>
+            <span class="stat__value" id="statDifficulty">Medium</span>
+          </div>
+          <div class="stat">
+            <span class="stat__label">Time</span>
+            <span class="stat__value" id="statTimer">00:00</span>
+          </div>
+          <div class="stat">
+            <span class="stat__label">Mistakes</span>
+            <span class="stat__value" id="statMistakes">0/3</span>
+          </div>
+          <div class="stat">
+            <span class="stat__label">Hints</span>
+            <span class="stat__value" id="statHints">3</span>
+          </div>
+        </div>
+
+        <div class="board" id="board" role="grid" aria-label="Sudoku board"></div>
+
+        <div class="pad" id="pad" aria-label="Number pad"></div>
+
+        <div class="actions">
+          <button class="btn" id="btnUndo" type="button">Undo <kbd>U</kbd></button>
+          <button class="btn" id="btnErase" type="button">Erase <kbd>Del</kbd></button>
+          <button class="btn" id="btnNotes" type="button" aria-pressed="false">Notes <kbd>N</kbd></button>
+          <button class="btn" id="btnHint" type="button">Hint <kbd>H</kbd></button>
+        </div>
+      </section>
+
+      <aside class="side">
+        <section class="card">
+          <h2 class="card__title">New game</h2>
+          <div class="difficulties" id="difficulties"></div>
+          <p class="card__note" id="progressNote">Pick a level to start a fresh puzzle.</p>
+        </section>
+
+        <section class="card">
+          <h2 class="card__title">How to play</h2>
+          <ul class="rules">
+            <li>Fill every row, column and 3&times;3 box with the digits 1&ndash;9.</li>
+            <li>No digit may repeat in a row, column or box.</li>
+            <li>Click a cell, then a number. Press <kbd>N</kbd> for pencil notes.</li>
+            <li>Three wrong entries end the round &mdash; take your time.</li>
+          </ul>
+        </section>
+      </aside>
+    </main>
+
+    <footer class="app__footer">
+      <span>Built with vanilla HTML, CSS and JavaScript.</span>
+    </footer>
+  </div>
+
+  <div class="modal" id="modal" hidden>
+    <div class="modal__card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <h2 class="modal__title" id="modalTitle">Title</h2>
+      <p class="modal__text" id="modalText">Text</p>
+      <div class="modal__actions">
+        <button class="btn btn--primary" id="modalPrimary" type="button">Play again</button>
+        <button class="btn" id="modalSecondary" type="button">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="assets/js/app.js"></script>
+</body>
+</html>
