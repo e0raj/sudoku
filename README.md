@@ -1,27 +1,34 @@
 # Sudoku
 
-A clean, full-screen Sudoku game that runs entirely in the browser — no frameworks, no build step, no trackers.
+A clean, fast Sudoku game that runs entirely in your browser. Plain HTML, CSS and JavaScript — no framework, no build step, no trackers, no ads.
 
-**Play it live:** https://e0raj.github.io/sudoku/
+**[Play it here →](https://e0raj.github.io/sudoku/)**
+
+---
+
+## What it is
+
+A full 9×9 Sudoku with four difficulty levels, pencil notes, hints, undo, a timer and sound effects. Every puzzle is generated fresh in the browser, and every one of them has exactly one solution — so the grid can always be solved by logic alone, without guessing.
+
+The board, the number row and the controls all fit on one screen on a phone. Below the game there is a short write-up on what Sudoku is, where it came from and why it is worth ten minutes of your day.
 
 ## Features
 
-- **Properly generated puzzles.** Every grid comes from a randomised backtracking fill, then clues are removed one at a time and kept removed only if exactly one solution remains. There is no hard-coded puzzle list.
-- **Four difficulty levels** — Easy (45 clues), Medium (36), Hard (30), Expert (26).
-- **Sound effects** synthesised with the Web Audio API — a soft blip for a correct digit, a low buzz for a wrong one, a chime for hints and a rising arpeggio when you finish. No audio files are downloaded; mute with the speaker button or the `M` key.
-- **Pencil notes** with automatic clean-up: a correct digit disappears from the notes in its row, column and box.
-- **Undo, erase and three hints** per round, plus a three-mistake limit.
+- **Generated puzzles, not a fixed list.** A randomised backtracking fill creates a complete grid, then clues are removed one at a time and kept removed only while a single solution remains.
+- **Four levels.** Easy starts with 45 clues, Medium 36, Hard 30, Expert 26.
+- **Pencil notes.** Mark candidate digits per cell; a correctly placed digit is cleaned out of the notes in its row, column and box automatically.
+- **Undo, erase and three hints** per round, with a three-mistake limit.
 - **Live highlighting** of the selected cell, its row, column, box and every matching digit.
-- **Autosave** — the puzzle, timer and notes survive a refresh.
-- **Dark and light themes**, full keyboard play, and a first screen that fits without scrolling from desktop down to small phones.
-- **A written section below the game** — what Sudoku is, where it came from, what playing it is good for, and full credits.
-- **SEO ready** — descriptive metadata, Open Graph and Twitter cards, JSON-LD structured data, `robots.txt`, `sitemap.xml` and a web app manifest.
+- **Sound effects** synthesised with the Web Audio API — nothing is downloaded, and one tap mutes them.
+- **Autosave.** Refresh or close the tab and the same round comes back, timer and notes included.
+- **Dark and light themes**, full keyboard play, and a layout that works from desktop down to small phones.
+- **Built to be found.** Descriptive metadata, Open Graph and Twitter cards, JSON-LD structured data, a sitemap, `robots.txt` and a web app manifest.
 
-## Keyboard controls
+## Keyboard
 
 | Key | Action |
 | --- | --- |
-| `1`–`9` | Place a digit in the selected cell |
+| `1` – `9` | Place a digit in the selected cell |
 | `Backspace` / `Delete` / `0` | Erase the selected cell |
 | Arrow keys | Move the selection |
 | `N` | Toggle notes mode |
@@ -30,54 +37,57 @@ A clean, full-screen Sudoku game that runs entirely in the browser — no framew
 | `M` | Mute or unmute sound |
 | `Esc` | Clear the selection |
 
-## Project structure
+## Project layout
 
 ```
 sudoku/
-├── index.html                  # the game
-├── about.html                  # rules, strategy and FAQ
+├── index.html                the game and the about section
+├── about.html                rules, strategy and FAQ
 ├── robots.txt
 ├── sitemap.xml
-├── site.webmanifest            # installable web app metadata
+├── site.webmanifest          installable web app metadata
 ├── assets/
 │   ├── css/
-│   │   └── style.css           # theme variables, grid, controls, responsive rules
+│   │   └── style.css         themes, grid, controls, typography
 │   ├── img/
 │   │   ├── favicon.svg
 │   │   ├── apple-touch-icon.png
-│   │   ├── rules.svg           # diagram used in the about section
-│   │   └── og-image.png        # social preview card
+│   │   ├── rules.svg         diagram used in the about section
+│   │   └── og-image.png      social preview card
 │   └── js/
-│       ├── sudoku.js           # puzzle engine — pure functions, no DOM
-│       ├── audio.js            # Web Audio sound effects
-│       └── app.js              # game state, rendering and input
+│       ├── sudoku.js         puzzle engine — pure functions, no DOM
+│       ├── audio.js          Web Audio sound effects
+│       └── app.js            game state, rendering and input
 └── README.md
 ```
 
-`assets/js/sudoku.js` has no DOM dependencies, so it can be imported and tested on its own:
+The three JavaScript files are deliberately separate: `sudoku.js` knows nothing about the page, `audio.js` knows nothing about the game, and `app.js` wires the two together with the interface. That makes the engine easy to test on its own:
 
 ```js
 import { generatePuzzle, countSolutions } from './assets/js/sudoku.js';
 
 const { puzzle, solution } = generatePuzzle('hard');
+
 console.log(countSolutions(puzzle, 2)); // 1 — exactly one solution
 ```
 
-## Run it locally
+## How it is built
 
-The JavaScript loads as ES modules, so serve the folder rather than opening `file://`:
+| Part | What it does |
+| --- | --- |
+| `sudoku.js` | Grid creation, randomised fill, solution counting, puzzle generation |
+| `audio.js` | Oscillator-based sound effects with gain envelopes |
+| `app.js` | State, rendering, pointer and keyboard input, autosave, preferences |
+| `style.css` | Two themes from one set of custom properties, responsive sizing |
 
-```bash
-git clone https://github.com/e0raj/sudoku.git
-cd sudoku
-python3 -m http.server 8000
-# then visit http://localhost:8000
-```
+No dependencies, no bundler, no analytics. The whole thing is a handful of static files.
 
-## Tech
+## Credits
 
-Vanilla HTML, CSS and JavaScript (ES modules), plus the Web Audio API for sound. No dependencies, no bundler, no analytics. Hosted on GitHub Pages.
+Designed and built by **[Raj (e0raj)](https://github.com/e0raj)** — game design, puzzle engine, interface, sound and writing.
+
+The puzzle format itself comes from **Howard Garns**, whose "Number Place" was published by Dell Magazines in 1979, and from **Nikoli**, who named it Sudoku in Japan in 1984. Icons and diagrams are hand-drawn SVG.
 
 ## Licence
 
-MIT — see [LICENSE](LICENSE).
+[MIT](LICENSE) — use it, change it, share it.
